@@ -1,0 +1,149 @@
+{
+  "version": "0.1.0",
+  "name": "bridge",
+  "instructions": [
+    {
+      "name": "initializeState",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "feeAddress", "type": "publicKey" },
+        { "name": "gCheckAddress", "type": "string" },
+        { "name": "minimalFee", "type": "u32" },
+        { "name": "stateVault", "type": "publicKey" },
+        { "name": "chainid", "type": "u64" }
+      ]
+    },
+    {
+      "name": "updateState",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "feeAddress", "type": "publicKey" },
+        { "name": "gCheckAddress", "type": "string" },
+        { "name": "minimalFee", "type": "u32" },
+        { "name": "stateVault", "type": "publicKey" },
+        { "name": "chainid", "type": "u64" }
+      ]
+    },
+    {
+      "name": "doCrossToken",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "feeAccount", "isMut": true, "isSigner": false },
+        { "name": "userVault", "isMut": true, "isSigner": false },
+        { "name": "stateVault", "isMut": true, "isSigner": false },
+        { "name": "tokenAccount", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "toContract", "type": "string" },
+        { "name": "toChainid", "type": "u64" },
+        { "name": "toAddress", "type": "string" },
+        { "name": "fee", "type": "u32" },
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "withdrawToken",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "cmhashstate", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "userVault", "isMut": true, "isSigner": false },
+        { "name": "tokenAccount", "isMut": true, "isSigner": false },
+        { "name": "stateVault", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "cmhash", "type": "string" },
+        { "name": "fromContract", "type": "string" },
+        { "name": "chainid", "type": "u64" },
+        { "name": "toContract", "type": "string" },
+        { "name": "recoveryId", "type": "u8" },
+        { "name": "sig", "type": { "array": ["u8", 64] } },
+        { "name": "amount", "type": "u64" }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "StateAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "authority", "type": "publicKey" },
+          { "name": "feeAddress", "type": "publicKey" },
+          { "name": "gCheckAddress", "type": "string" },
+          { "name": "minimalFee", "type": "u32" },
+          { "name": "bump", "type": "u8" },
+          { "name": "gStateVault", "type": "publicKey" },
+          { "name": "gChainid", "type": "u64" }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "EventCrossToken",
+      "fields": [
+        { "name": "fee", "type": "u32", "index": false },
+        { "name": "fromContract", "type": "publicKey", "index": false },
+        { "name": "toContract", "type": "string", "index": false },
+        { "name": "toChainid", "type": "u64", "index": false },
+        { "name": "fromAddress", "type": "publicKey", "index": false },
+        { "name": "toAddress", "type": "string", "index": false },
+        { "name": "amount", "type": "u64", "index": false }
+      ]
+    },
+    {
+      "name": "EventCrossTokenFailed",
+      "fields": [
+        { "name": "fee", "type": "u32", "index": false },
+        { "name": "fromContract", "type": "publicKey", "index": false },
+        { "name": "toContract", "type": "string", "index": false },
+        { "name": "toChainid", "type": "u64", "index": false },
+        { "name": "fromAddress", "type": "publicKey", "index": false },
+        { "name": "toAddress", "type": "string", "index": false },
+        { "name": "amount", "type": "u64", "index": false }
+      ]
+    },
+    {
+      "name": "EventWithdrawToken",
+      "fields": [
+        { "name": "fromContract", "type": "publicKey", "index": false },
+        { "name": "fromChainid", "type": "u64", "index": false },
+        { "name": "toContract", "type": "string", "index": false },
+        { "name": "address", "type": "publicKey", "index": false },
+        { "name": "amount", "type": "u64", "index": false }
+      ]
+    },
+    {
+      "name": "EventWithdrawTokenFailed",
+      "fields": [
+        { "name": "fromContract", "type": "publicKey", "index": false },
+        { "name": "fromChainid", "type": "u64", "index": false },
+        { "name": "toContract", "type": "string", "index": false },
+        { "name": "address", "type": "publicKey", "index": false },
+        { "name": "amount", "type": "u64", "index": false }
+      ]
+    }
+  ],
+  "errors": [
+    { "code": 6000, "name": "NotAnAuhority", "msg": "Not an authority" },
+    { "code": 6001, "name": "InvalidChain", "msg": "Invalid chain" },
+    { "code": 6002, "name": "InvalidNonce", "msg": "Invalid nonce" },
+    { "code": 6003, "name": "InvalidSignature", "msg": "Invalid signature" },
+    { "code": 6004, "name": "InsufficientFee", "msg": "Insufficient fee" },
+    { "code": 6005, "name": "IncorectFeeAddress", "msg": "Incorect fee address" }
+  ]
+}
